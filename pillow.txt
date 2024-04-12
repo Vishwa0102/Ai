@@ -1,0 +1,191 @@
+# Python example program for image subtraction
+
+from PIL import Image
+import numpy as np
+
+# Paths of two image frames
+image1Path = "Images/TwoBottles.jpg"
+image2Path = "Images/OneBottle.jpg"
+
+# Open the images
+
+image1 = Image.open(image1Path);
+image2 = Image.open(image2Path);
+
+# Get the image buffer as ndarray
+
+buffer1 = np.asarray(image1);
+buffer2 = np.asarray(image2);
+
+# Subtract image2 from image1
+buffer3 = buffer1 - buffer2;
+
+# Construct a new Image from the resultant buffer
+
+differenceImage = Image.fromarray(buffer3);
+
+# Display all the images including the difference image
+
+image1.show();
+image2.show();
+
+differenceImage.show();
+
+
+#Thresholding image
+
+from PIL import Image
+
+
+# Method to process the red band
+
+def pixelProcRed(intensity):
+    return 0
+
+
+# Method to process the blue band
+
+def pixelProcBlue(intensity):
+    return intensity
+
+
+# Method to process the green band
+
+def pixelProcGreen(intensity):
+    return 0
+
+
+# Create an image object
+
+imageObject = Image.open("Images/Garden.jpeg")
+
+# Split the red, green and blue bands from the Image
+
+multiBands = imageObject.split()
+
+# Apply point operations that does thresholding on each color band
+
+redBand = multiBands[0].point(pixelProcRed)
+
+greenBand = multiBands[1].point(pixelProcGreen)
+
+blueBand = multiBands[2].point(pixelProcBlue)
+
+# Display the individual band after thresholding
+redBand.show()
+redBand.save('redBand.jpg')
+greenBand.show()
+greenBand.save('greenBand.jpg')
+blueBand.show()
+blueBand.save('blueBand.jpg')
+
+# Create a new image from the thresholded red, green and blue brands
+
+newImage = Image.merge("RGB", (redBand, greenBand, blueBand))
+
+# Display the merged image after thresholding
+
+newImage.show()
+newImage.save('GardenThresholded.jpg')
+
+
+
+
+# Example Python Program for contrast stretching
+
+from PIL import Image
+
+# Method to process the red band of the image
+
+def normalizeRed(intensity):
+    iI = intensity
+    minI = 86
+    maxI = 230
+    minO = 0
+    maxO = 255
+    iO = (iI - minI) * (((maxO - minO) / (maxI - minI)) + minO)
+    return iO
+
+
+# Method to process the green band of the image
+
+def normalizeGreen(intensity):
+    iI = intensity
+    minI = 90
+    maxI = 225
+    minO = 0
+    maxO = 255
+    iO = (iI - minI) * (((maxO - minO) / (maxI - minI)) + minO)
+    return iO
+
+# Method to process the blue band of the image
+
+def normalizeBlue(intensity):
+    iI = intensity
+    minI = 100
+    maxI = 210
+    minO = 0
+    maxO = 255
+    iO = (iI - minI) * (((maxO - minO) / (maxI - minI)) + minO)
+    return iO
+
+
+# Create an image object
+
+imageObject = Image.open("Images/ColorChangingFlowers.jpg")
+# Split the red, green and blue bands from the Image
+multiBands = imageObject.split()
+# Apply point operations that does contrast stretching on each color band
+normalizedRedBand = multiBands[0].point(normalizeRed)
+
+
+
+normalizedGreenBand = multiBands[1].point(normalizeGreen)
+normalizedBlueBand = multiBands[2].point(normalizeBlue)
+# Create a new image from the contrast stretched red, green and blue brands
+normalizedImage = Image.merge("RGB", (normalizedRedBand, normalizedGreenBand, normalizedBlueBand))
+# Display the image before contrast stretching
+imageObject.show()
+normalizedImage.save("Images/FlowersContrastApplied.jpg")
+# Display the image after contrast stretching
+normalizedImage.show()
+
+
+from PIL import Image
+from PIL import ImageFilter
+import math
+
+#Compute Log
+
+def logTransform(c, f):
+    g = c * math.log(float(1 + f), 10)
+    return g
+
+def logTransformImage(image, outputMax = 255, inputMax = 255):
+    c = outputMax / math.log(inputMax+1, 10);
+    #Read pixels and apply logarithmic transformation
+    for i in range(0, image.size[0]-1):
+        for j in range(0, image.size[1]-1):
+            # Get pixel value at (x, y) position of the image
+            f = image.getpixel((i, j))
+
+            # Do log transformation of the pixel
+            redPixel = round(logTransform(c, f[0]))
+            greenPixel = round(logTransform(c, f[1]))
+            bluePixel = round(logTransform(c, f[2]))
+
+            #modify the image with the transformed pixel values
+            image.putpixel((i,j), (redPixel, greenPixel, bluePixel))
+    return image
+
+
+#Display the original image
+imageFileName = "Images/Rose_dark.jpeg"
+image = Image.open(imageFileName)
+image.show()
+
+#Display the image after applying the logarithmic transformation
+
+logTransformedImage = logTransformImage(image);
+logTransformedImage.show()
+

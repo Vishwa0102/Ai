@@ -1,0 +1,10 @@
+fractals - ccurve,dragon,julia,terrain,mandelbrot
+
+pillow-doc pillow
+
+Projections- house,car,normal
+
+Histograms- eq,matching,min,max,mean,median,edge-dect,quantization,log trans,smileyface.
+
+image-canny,lapla,log,filter,powerlaw,prewitt,sampling,sharpen,sobeledge
+
