@@ -8,3 +8,8 @@ Histograms- eq,matching,min,max,mean,median,edge-dect,quantization,log trans,smi
 
 image-canny,lapla,log,filter,powerlaw,prewitt,sampling,sharpen,sobeledge
 
+extra
+fractals
+guide
+image
+proj
