@@ -1,0 +1,146 @@
+PROJECTION CAR 2
+
+#include <windows.h>
+
+#include <GL/glut.h>
+#include <stdlib.h>
+
+// Define the camera position
+GLfloat ex = 0.0, ey = 1.0, ez = 5.0;
+
+// Function to initialize the OpenGL settings
+void init()
+{
+    glEnable(GL_DEPTH_TEST); // Enable depth testing
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45.0, 1.0, 1.0, 100.0); // Set perspective projection
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+}
+
+// Function to draw the car
+void drawCar()
+{
+    // Set the color for the car body
+    glColor3f(0.0, 0.0, 1.0); // Blue color
+
+    // Draw the car body as a box
+    glPushMatrix();
+    glTranslatef(0.0, 0.5, 0.0); // Translate the car body up
+    glScalef(2.0, 0.5, 1.0); // Scale the car body
+    glutSolidCube(1.0);
+    glPopMatrix();
+
+    // Draw the car roof as a box
+    glColor3f(1.0,0.0,0.0);
+    glPushMatrix();
+    glTranslatef(0.0, 1.0, 0.0); // Translate the roof up
+    glScalef(1.0, 0.5, 1.0); // Scale the roof
+    glutSolidCube(1.0);
+    glPopMatrix();
+
+    // Draw the wheels as spheres
+    glColor3f(1.0, 1.0, 1.0); // Black color
+    glPushMatrix();
+    glTranslatef(-0.8, 0.1, 0.5); // Front left wheel
+    glutSolidSphere(0.2, 20, 20);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0.8, 0.1, 0.5); // Front right wheel
+    glutSolidSphere(0.2, 20, 20);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(-0.8, 0.1, -0.5); // Back left wheel
+    glutSolidSphere(0.2, 20, 20);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0.8, 0.1, -0.5); // Back right wheel
+    glutSolidSphere(0.2, 20, 20);
+    glPopMatrix();
+}
+
+// Display function to render the scene
+void display()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    gluLookAt(ex, ey, ez, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    drawCar();
+    glutSwapBuffers();
+}
+
+// Reshape function to handle window resizing
+void reshape(int width, int height)
+{
+    glViewport(0, 0, width, height);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45.0, (GLfloat)width / (GLfloat)height, 1.0, 100.0);
+    glMatrixMode(GL_MODELVIEW);
+}
+
+// Keyboard function to handle input
+void keyboard(unsigned char key, int x, int y)
+{
+    switch (key)
+    {
+    case 27: // ESC key
+        exit(0);
+        break;
+    case '+':
+        ez -= 0.5; // Move the camera closer
+        break;
+    case '-':
+        ez += 0.5; // Move the camera further
+        break;
+    default:
+        break;
+    }
+    glutPostRedisplay(); // Redraw the scene
+}
+
+// Arrow key function to handle special keys
+void specialKeys(int key, int x, int y)
+{
+    switch (key)
+    {
+    case GLUT_KEY_LEFT:
+        ex -= 0.2; // Move the camera left
+        break;
+    case GLUT_KEY_RIGHT:
+        ex += 0.2; // Move the camera right
+        break;
+    case GLUT_KEY_UP:
+        ey += 0.2; // Move the camera up
+        break;
+    case GLUT_KEY_DOWN:
+        ey -= 0.2; // Move the camera down
+        break;
+    }
+    glutPostRedisplay(); // Redraw the scene
+}
+
+// Main function
+int main(int argc, char *argv[])
+{
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitWindowSize(640, 480);
+    glutInitWindowPosition(10, 10);
+    glutCreateWindow("3D Car Projection");
+
+    init();
+
+    glutDisplayFunc(display);
+    glutReshapeFunc(reshape);
+    glutKeyboardFunc(keyboard);
+    glutSpecialFunc(specialKeys);
+
+    glutMainLoop();
+
+    return 0;
+}
